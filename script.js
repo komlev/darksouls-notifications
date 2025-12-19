@@ -4,7 +4,7 @@ const TEXT = "EMAIL SENT";
 // playing sound
 const playSound = () => {
   try {
-    var sound = new Audio(chrome.runtime.getURL("sound.mp3"));
+    const sound = new Audio(chrome.runtime.getURL("sound.mp3"));
     sound.play();
   } catch (err) {}
 };
