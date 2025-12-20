@@ -2,17 +2,23 @@
   "manifest_version": 2,
   "name": "Gmail Email Sent",
   "description": "After you send an email through gmail, you'll see Dark Souls themed notification.",
-  "version": "1.1",
+  "version": "1.2",
   "icons": {
     "48": "icon-48.png",
     "96": "icon-96.png"
   },
-
+  "background": {
+    "scripts": ["background.js"]
+  },
+  "permissions": [
+    "webRequest",
+    "https://mail.google.com/*"
+  ],
   "content_scripts": [
     {
       "matches": ["https://mail.google.com/*"],
       "js": ["script.js"],
-      "css": ["styles.css"]
+      "css": ["style.css"]
     }
   ],
   "web_accessible_resources": ["sound.mp3"]

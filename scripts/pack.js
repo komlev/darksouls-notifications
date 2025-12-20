@@ -4,6 +4,7 @@ import childProcess from "node:child_process";
 
 const VALID_TYPES = ["firefox", "chrome"];
 const NECESSARY_FILES = [
+  "background.js",
   "OptimusPrinceps.ttf",
   "script.js",
   "sound.mp3",

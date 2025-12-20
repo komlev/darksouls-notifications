@@ -6,7 +6,7 @@ const playSound = () => {
   try {
     const sound = new Audio(chrome.runtime.getURL("sound.mp3"));
     sound.play();
-  } catch (err) {}
+  } catch (_err) {}
 };
 
 // show email sent text
@@ -38,23 +38,14 @@ const showText = () => {
       if (container.parentNode) {
         container.parentNode.removeChild(container);
       }
-      startPolling();
-      // 20 secs cooldown
+      // 20 secs cooldown - ready to receive next message
     }, 20000);
   }, 5000);
 };
 
-let pollId;
-// looking for indication that email is sent
-const startPolling = () => {
-  clearInterval(pollId);
-  pollId = setInterval(() => {
-    const link = document.getElementById("link_vsm");
-    if (link) {
-      showText();
-      clearInterval(pollId);
-    }
-  }, 1000);
-};
-
-startPolling();
+// Listen for messages from background script
+chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
+  if (message.action === "emailSent") {
+    showText();
+  }
+});
