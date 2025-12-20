@@ -105,6 +105,38 @@ const isYahooSendRequest = (requestBody, url) => {
   }
 };
 
+// Helper function to check if ProtonMail request is a send action
+const isProtonMailSendRequest = (url, method) => {
+  // ProtonMail uses POST method for sending messages
+  // Draft saves and other operations use different methods (GET, PUT)
+  try {
+    // Send: POST to /api/mail/v4/messages/ with Source=composer
+    // Draft/other: GET or PUT to same endpoint
+    return (
+      method === "POST" &&
+      url.includes("/api/mail/v4/messages/") &&
+      url.includes("?Source=composer")
+    );
+  } catch (_err) {
+    return false;
+  }
+};
+
+// Helper function to check if Yandex request is a send action
+const isYandexSendRequest = (url, method) => {
+  // Yandex uses POST method with _send=true parameter for sending messages
+  // Draft saves use _send=false or no _send parameter
+  try {
+    return (
+      method === "POST" &&
+      url.includes("/web-api/do-send/") &&
+      url.includes("_send=true")
+    );
+  } catch (_err) {
+    return false;
+  }
+};
+
 // Listen for network requests to Gmail sync endpoint
 chrome.webRequest.onBeforeRequest.addListener(
   (details) => {
@@ -148,6 +180,38 @@ chrome.webRequest.onBeforeRequest.addListener(
   },
   {
     urls: ["https://mail.yahoo.com/ws/v3/batch?name=messages.saveAndSend*"],
+    types: ["xmlhttprequest"],
+  },
+  ["requestBody"],
+);
+
+// Listen for network requests to ProtonMail messages endpoint
+chrome.webRequest.onBeforeRequest.addListener(
+  (details) => {
+    if (isProtonMailSendRequest(details.url, details.method)) {
+      chrome.tabs
+        .sendMessage(details.tabId, { action: "emailSent" })
+        .catch(() => {});
+    }
+  },
+  {
+    urls: ["https://mail.proton.me/api/mail/v4/messages/*"],
+    types: ["xmlhttprequest"],
+  },
+  ["requestBody"],
+);
+
+// Listen for network requests to Yandex Mail send endpoint
+chrome.webRequest.onBeforeRequest.addListener(
+  (details) => {
+    if (isYandexSendRequest(details.url, details.method)) {
+      chrome.tabs
+        .sendMessage(details.tabId, { action: "emailSent" })
+        .catch(() => {});
+    }
+  },
+  {
+    urls: ["https://mail.yandex.ru/web-api/do-send/*"],
     types: ["xmlhttprequest"],
   },
   ["requestBody"],
