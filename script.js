@@ -46,6 +46,7 @@ const showText = () => {
 
 // Listen for messages from background script
 chrome.runtime.onMessage.addListener((message) => {
+  console.log(message.action);
   if (message.action === "emailSent") {
     showText();
   }
