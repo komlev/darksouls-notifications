@@ -1,48 +1,48 @@
 {
-  "manifest_version": 3,
-  "name": "Email Sent - Dark Souls Notification",
-  "description": "Dark Souls themed notification when you send an email (Gmail, Outlook, Yahoo, ProtonMail, Yandex).",
-  "version": "2.0",
-  "icons": {
-    "16": "icon.png",
-    "32": "icon.png",
-    "48": "icon.png",
-    "128": "icon.png"
-  },
-  "background": {
-    "service_worker": "background.js"
-  },
-  "permissions": ["webRequest"],
-  "host_permissions": [
-    "https://mail.google.com/*",
-    "https://outlook.live.com/*",
-    "https://mail.yahoo.com/*",
-    "https://mail.proton.me/*",
-    "https://mail.yandex.ru/*"
-  ],
-  "content_scripts": [
-    {
-      "matches": [
-        "https://mail.google.com/*",
-        "https://outlook.live.com/*",
-        "https://mail.yahoo.com/*",
-        "https://mail.proton.me/*",
-        "https://mail.yandex.ru/*"
-      ],
-      "js": ["script.js"],
-      "css": ["style.css"]
-    }
-  ],
-  "web_accessible_resources": [
-    {
-      "resources": ["sound.mp3"],
-      "matches": [
-        "https://mail.google.com/*",
-        "https://outlook.live.com/*",
-        "https://mail.yahoo.com/*",
-        "https://mail.proton.me/*",
-        "https://mail.yandex.ru/*"
-      ]
-    }
-  ]
+	"manifest_version": 3,
+	"name": "Email Sent - Dark Souls Notification",
+	"description": "Dark Souls themed notification when you send an email (Gmail, Outlook, Yahoo, ProtonMail, Yandex).",
+	"version": "2.0",
+	"icons": {
+		"16": "icon.png",
+		"32": "icon.png",
+		"48": "icon.png",
+		"128": "icon.png"
+	},
+	"background": {
+		"service_worker": "background.js"
+	},
+	"permissions": ["webRequest"],
+	"host_permissions": [
+		"https://mail.google.com/*",
+		"https://outlook.live.com/*",
+		"https://mail.yahoo.com/*",
+		"https://mail.proton.me/*",
+		"https://mail.yandex.ru/*"
+	],
+	"content_scripts": [
+		{
+			"matches": [
+				"https://mail.google.com/*",
+				"https://outlook.live.com/*",
+				"https://mail.yahoo.com/*",
+				"https://mail.proton.me/*",
+				"https://mail.yandex.ru/*"
+			],
+			"js": ["script.js"],
+			"css": ["style.css"]
+		}
+	],
+	"web_accessible_resources": [
+		{
+			"resources": ["sound.mp3"],
+			"matches": [
+				"https://mail.google.com/*",
+				"https://outlook.live.com/*",
+				"https://mail.yahoo.com/*",
+				"https://mail.proton.me/*",
+				"https://mail.yandex.ru/*"
+			]
+		}
+	]
 }
