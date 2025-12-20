@@ -63,7 +63,9 @@ const isOutlookSendRequest = (requestBody) => {
     if (!bodyStr) return false;
 
     // The key marker for actual send (vs draft save) is MessageDisposition
-    const isSendAndSave = bodyStr.includes('"MessageDisposition":"SendAndSaveCopy"');
+    const isSendAndSave = bodyStr.includes(
+      '"MessageDisposition":"SendAndSaveCopy"',
+    );
 
     // Verify it's a compose operation (not some other action)
     const isComposeOperation = bodyStr.includes('"ComposeOperation":"newMail"');
@@ -72,6 +74,32 @@ const isOutlookSendRequest = (requestBody) => {
     // - MessageDisposition is SendAndSaveCopy (actual send, not just save)
     // - ComposeOperation is newMail
     return isSendAndSave && isComposeOperation;
+  } catch (_err) {
+    return false;
+  }
+};
+
+// Helper function to check if Yahoo request is a send action
+const isYahooSendRequest = (requestBody, url) => {
+  // Yahoo uses a batch API with a clear URL pattern
+  try {
+    // The URL parameter is the most reliable indicator
+    // Send: name=messages.saveAndSend
+    // Draft: name=messages.save (without AndSend)
+    if (!url.includes("name=messages.saveAndSend")) {
+      return false;
+    }
+
+    if (
+      !requestBody ||
+      !requestBody.formData ||
+      !requestBody.formData.batchJson
+    ) {
+      return false;
+    }
+    return requestBody.formData.batchJson.some((b) => {
+      return b.includes("/send") && b.includes('"id":"SendMessage"');
+    });
   } catch (_err) {
     return false;
   }
@@ -104,6 +132,22 @@ chrome.webRequest.onBeforeRequest.addListener(
   },
   {
     urls: ["https://outlook.live.com/owa/*/service.svc?action=CreateItem*"],
+    types: ["xmlhttprequest"],
+  },
+  ["requestBody"],
+);
+
+// Listen for network requests to Yahoo batch endpoint
+chrome.webRequest.onBeforeRequest.addListener(
+  (details) => {
+    if (isYahooSendRequest(details.requestBody, details.url)) {
+      chrome.tabs
+        .sendMessage(details.tabId, { action: "emailSent" })
+        .catch(() => {});
+    }
+  },
+  {
+    urls: ["https://mail.yahoo.com/ws/v3/batch?name=messages.saveAndSend*"],
     types: ["xmlhttprequest"],
   },
   ["requestBody"],
