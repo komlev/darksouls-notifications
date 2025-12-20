@@ -5,6 +5,7 @@ const TEXT = "EMAIL SENT";
 const playSound = () => {
   try {
     const sound = new Audio(chrome.runtime.getURL("sound.mp3"));
+    sound.volume = 0.75;
     sound.play();
   } catch (_err) {}
 };
@@ -38,13 +39,13 @@ const showText = () => {
       if (container.parentNode) {
         container.parentNode.removeChild(container);
       }
-      // 20 secs cooldown - ready to receive next message
-    }, 20000);
+      // 10 secs cooldown - ready to receive next message
+    }, 10000);
   }, 5000);
 };
 
 // Listen for messages from background script
-chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
+chrome.runtime.onMessage.addListener((message) => {
   if (message.action === "emailSent") {
     showText();
   }
