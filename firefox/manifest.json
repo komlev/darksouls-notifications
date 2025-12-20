@@ -2,7 +2,7 @@
   "manifest_version": 2,
   "name": "Email Sent - Dark Souls Notification",
   "description": "Dark Souls themed notification when you send an email (Gmail, Outlook, Yahoo, ProtonMail, Yandex).",
-  "version": "1.2",
+  "version": "2.0",
   "icons": {
     "48": "icon-48.png",
     "96": "icon-96.png"
