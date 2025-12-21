@@ -1,9 +1,10 @@
-import fs from "fs";
-import path from "path";
-import childProcess from "child_process";
+import fs from "node:fs";
+import path from "node:path";
+import childProcess from "node:child_process";
 
 const VALID_TYPES = ["firefox", "chrome"];
 const NECESSARY_FILES = [
+  "background.js",
   "OptimusPrinceps.ttf",
   "script.js",
   "sound.mp3",
@@ -25,7 +26,7 @@ if (!VALID_TYPES.includes(incomingType)) {
 
 const createTmpDirectory = (t) => {
   // CREATE CLEAN TMP DIRECTORY
-  const tmpDir = `./tmp_${new Date().getTime()}_${t}`;
+  const tmpDir = `./tmp_${Date.now()}_${t}`;
   if (fs.existsSync(tmpDir)) {
     // SHOULD NOT HAPPEN
     console.log(`Directory ${tmpDir} already exists`);
@@ -47,10 +48,6 @@ const cleanup = (dir) => {
 
 const zipDirectory = (dir, zipFileName) => {
   childProcess.execSync(`zip -r ${zipFileName} *`, { cwd: dir });
-};
-
-const finalize = (zip, tmpDir) => {
-  // FINALIZE
 };
 
 const packExtension = (type) => {
@@ -83,12 +80,12 @@ const packExtension = (type) => {
   }
 
   // MOVE ZIP FILE TO DIST DIRECTORY
-  const packageName = fs.renameSync(
+  fs.renameSync(
     `./${tmpDirectory}/${zipFile}`,
     path.resolve("./dist", PACKAGE_NAMES[type]),
   );
 
-  // // CLEANUP
+  // CLEANUP
   cleanup(tmpDirectory);
 };
 

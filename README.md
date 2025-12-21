@@ -2,6 +2,12 @@
 
 Dark Souls themed email notification extension
 
+## Features
+- Dark Souls theme for email notifications
+- Supports both Chrome and Firefox browsers
+- Supports Gmail, Outlook, Yahoo, ProtonMail, Yandex
+- Supports new messages, replies and forwards
+
 ## How to run
 
 1. Clone the repository: `git clone https://github.com/username/darksouls-notifications.git`
