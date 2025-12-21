@@ -10,6 +10,14 @@
 	"background": {
 		"scripts": ["background.js"]
 	},
+	"browser_specific_settings": {
+		"gecko": {
+			"id": "{4fb15d12-23d8-483f-be4c-aa6608ff6dac}",
+			"data_collection_permissions": {
+				"required": ["none"]
+			}
+		}
+	},
 	"permissions": [
 		"webRequest",
 		"https://mail.google.com/*",
