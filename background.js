@@ -75,8 +75,10 @@ const isGmailSendRequest = (requestBody) => {
       const smartlabelsArrays = findSmartlabelsInObject(parsedData);
 
       for (let smartlabels of smartlabelsArrays) {
-        const hasSentFlag = smartlabels.includes("^pfg") || smartlabels.includes("^f_bt");
-        const isDraft = smartlabels.includes("^r") || smartlabels.includes("^r_bt");
+        const hasSentFlag =
+          smartlabels.includes("^pfg") || smartlabels.includes("^f_bt");
+        const isDraft =
+          smartlabels.includes("^r") || smartlabels.includes("^r_bt");
 
         // If we find a smartlabels array with sent flag and no draft flag, it's a send
         if (hasSentFlag && !isDraft) {
