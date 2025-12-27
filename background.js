@@ -16,14 +16,76 @@ const decodeRequestBody = (requestBody) => {
   return bodyStr;
 };
 
+// Helper function to check if a value is a smartlabels array (based on gmail.js)
+// Smartlabels are arrays of strings starting with ^ (like ^pfg, ^f_bt, ^r, etc.)
+const isSmartlabelsArray = (obj) => {
+  if (!obj || !Array.isArray(obj) || obj.length === 0) {
+    return false;
+  }
+  for (let item of obj) {
+    if (typeof item !== "string" || !/^\^[a-z_]+/.test(item)) {
+      return false;
+    }
+  }
+  return true;
+};
+
+// Helper function to recursively search for smartlabels in parsed JSON (based on gmail.js)
+const findSmartlabelsInObject = (obj) => {
+  const smartlabels = [];
+
+  const searchRecursive = (item) => {
+    if (isSmartlabelsArray(item)) {
+      smartlabels.push(item);
+      return;
+    }
+
+    if (Array.isArray(item)) {
+      for (let element of item) {
+        searchRecursive(element);
+      }
+    } else if (item && typeof item === "object") {
+      for (let key in item) {
+        searchRecursive(item[key]);
+      }
+    }
+  };
+
+  searchRecursive(obj);
+  return smartlabels;
+};
+
 // Helper function to check if Gmail request is a send action
+// Based on gmail.js detection logic
 const isGmailSendRequest = (requestBody) => {
-  // Gmail obfuscates its requests. This is hard and unreliable, feels like magic.
-  // If they change something this whole thing won't work but oh well.
   try {
     const bodyStr = decodeRequestBody(requestBody);
     if (!bodyStr) return false;
 
+    // Try to parse as JSON for more robust detection (gmail.js approach)
+    let parsedData = null;
+    try {
+      parsedData = JSON.parse(bodyStr);
+    } catch {
+      // If JSON parsing fails, fall back to string matching
+    }
+
+    // Method 1: Parse JSON structure and look for smartlabels (gmail.js approach)
+    if (parsedData) {
+      const smartlabelsArrays = findSmartlabelsInObject(parsedData);
+
+      for (let smartlabels of smartlabelsArrays) {
+        const hasSentFlag = smartlabels.includes("^pfg") || smartlabels.includes("^f_bt");
+        const isDraft = smartlabels.includes("^r") || smartlabels.includes("^r_bt");
+
+        // If we find a smartlabels array with sent flag and no draft flag, it's a send
+        if (hasSentFlag && !isDraft) {
+          return true;
+        }
+      }
+    }
+
+    // Method 2: Fallback to string matching (original approach)
     // Check for sent flags - these are present when email is actually sent
     const hasSentFlags =
       bodyStr.includes('"^f_bt"') || // Sent button flag (most reliable)
@@ -137,7 +199,8 @@ const isYandexSendRequest = (url, method) => {
   }
 };
 
-// Listen for network requests to Gmail sync endpoint
+// Listen for network requests to Gmail sync endpoint (/i/s)
+// This endpoint is used for most Gmail actions including sending emails
 chrome.webRequest.onBeforeRequest.addListener(
   (details) => {
     if (isGmailSendRequest(details.requestBody)) {
@@ -148,6 +211,23 @@ chrome.webRequest.onBeforeRequest.addListener(
   },
   {
     urls: ["https://mail.google.com/sync/u/*/i/s*"],
+    types: ["xmlhttprequest"],
+  },
+  ["requestBody"],
+);
+
+// Listen for network requests to Gmail fetch endpoint (/i/fd)
+// This endpoint is also used for email operations (based on gmail.js)
+chrome.webRequest.onBeforeRequest.addListener(
+  (details) => {
+    if (isGmailSendRequest(details.requestBody)) {
+      chrome.tabs
+        .sendMessage(details.tabId, { action: "emailSent" })
+        .catch(() => {});
+    }
+  },
+  {
+    urls: ["https://mail.google.com/sync/u/*/i/fd*"],
     types: ["xmlhttprequest"],
   },
   ["requestBody"],
