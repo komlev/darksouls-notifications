@@ -22,7 +22,7 @@ const isSmartlabelsArray = (obj) => {
   if (!obj || !Array.isArray(obj) || obj.length === 0) {
     return false;
   }
-  for (let item of obj) {
+  for (const item of obj) {
     if (typeof item !== "string" || !/^\^[a-z_]+/.test(item)) {
       return false;
     }
@@ -41,11 +41,11 @@ const findSmartlabelsInObject = (obj) => {
     }
 
     if (Array.isArray(item)) {
-      for (let element of item) {
+      for (const element of item) {
         searchRecursive(element);
       }
     } else if (item && typeof item === "object") {
-      for (let key in item) {
+      for (const key in item) {
         searchRecursive(item[key]);
       }
     }
@@ -74,7 +74,7 @@ const isGmailSendRequest = (requestBody) => {
     if (parsedData) {
       const smartlabelsArrays = findSmartlabelsInObject(parsedData);
 
-      for (let smartlabels of smartlabelsArrays) {
+      for (const smartlabels of smartlabelsArrays) {
         const hasSentFlag =
           smartlabels.includes("^pfg") || smartlabels.includes("^f_bt");
         const isDraft =
@@ -245,7 +245,10 @@ chrome.webRequest.onBeforeRequest.addListener(
     }
   },
   {
-    urls: ["https://outlook.live.com/owa/*/service.svc?action=CreateItem*"],
+    urls: [
+      "https://outlook.live.com/owa/*/service.svc?action=CreateItem*",
+      "https://outlook.office.com/owa/*/service.svc?action=CreateItem*",
+    ],
     types: ["xmlhttprequest"],
   },
   ["requestBody"],

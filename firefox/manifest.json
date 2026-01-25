@@ -2,7 +2,7 @@
 	"manifest_version": 2,
 	"name": "Email Sent - Dark Souls Notification",
 	"description": "Dark Souls themed notification when you send an email (Gmail, Outlook, Yahoo, ProtonMail, Yandex).",
-	"version": "2.1",
+	"version": "2.2",
 	"icons": {
 		"48": "icon-48.png",
 		"96": "icon-96.png"
@@ -22,6 +22,7 @@
 		"webRequest",
 		"https://mail.google.com/*",
 		"https://outlook.live.com/*",
+		"https://outlook.office.com/*",
 		"https://mail.yahoo.com/*",
 		"https://mail.proton.me/*",
 		"https://mail.yandex.ru/*"
@@ -31,6 +32,7 @@
 			"matches": [
 				"https://mail.google.com/*",
 				"https://outlook.live.com/*",
+				"https://outlook.office.com/*",
 				"https://mail.yahoo.com/*",
 				"https://mail.proton.me/*",
 				"https://mail.yandex.ru/*"
