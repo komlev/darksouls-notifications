@@ -1,6 +1,6 @@
+import childProcess from "node:child_process";
 import fs from "node:fs";
 import path from "node:path";
-import childProcess from "node:child_process";
 
 const VALID_TYPES = ["firefox", "chrome"];
 const NECESSARY_FILES = [
