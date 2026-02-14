@@ -1,0 +1,120 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Volume Control</title>
+    <style>
+      body {
+        font-family:
+          -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu,
+          Cantarell, sans-serif;
+        padding: 16px;
+        width: 280px;
+        margin: 0;
+        background: #1a1a1a;
+        color: #e0e0e0;
+      }
+      h2 {
+        font-size: 16px;
+        margin: 0 0 12px 0;
+        color: #f0a000;
+        font-weight: 600;
+      }
+      .volume-section {
+        margin-bottom: 12px;
+      }
+      label {
+        display: block;
+        margin-bottom: 8px;
+        font-size: 13px;
+        font-weight: 500;
+        color: #d0d0d0;
+      }
+      .volume-control {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+      }
+      input[type="range"] {
+        flex: 1;
+        height: 6px;
+        background: #4a4a4a;
+        border-radius: 3px;
+        outline: none;
+        -webkit-appearance: none;
+      }
+      input[type="range"]::-webkit-slider-thumb {
+        -webkit-appearance: none;
+        appearance: none;
+        width: 18px;
+        height: 18px;
+        background: #f0a000;
+        cursor: pointer;
+        border-radius: 50%;
+      }
+      input[type="range"]::-moz-range-thumb {
+        width: 18px;
+        height: 18px;
+        background: #f0a000;
+        cursor: pointer;
+        border-radius: 50%;
+        border: none;
+      }
+      .volume-value {
+        min-width: 40px;
+        text-align: center;
+        font-weight: bold;
+        color: #f0a000;
+        font-size: 13px;
+      }
+      .test-button {
+        width: 100%;
+        padding: 8px 16px;
+        background: #f0a000;
+        color: #1a1a1a;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+        font-weight: bold;
+        font-size: 13px;
+        transition: background 0.2s;
+        margin-top: 8px;
+      }
+      .test-button:hover {
+        background: #ffb820;
+      }
+      .test-button:active {
+        background: #d09000;
+      }
+      .status {
+        margin-top: 8px;
+        padding: 6px;
+        background: #2a2a2a;
+        border-radius: 4px;
+        text-align: center;
+        font-size: 11px;
+        color: #808080;
+        min-height: 16px;
+      }
+      .status.success {
+        color: #4caf50;
+      }
+    </style>
+  </head>
+  <body>
+    <h2>Dark Souls Notification</h2>
+
+    <div class="volume-section">
+      <label for="volume">Volume</label>
+      <div class="volume-control">
+        <input type="range" id="volume" min="0" max="100" value="75" />
+        <span class="volume-value" id="volumeValue">75%</span>
+      </div>
+      <button class="test-button" id="testSound">Test Sound</button>
+      <div class="status" id="status">Auto-saved</div>
+    </div>
+
+    <script src="popup.js"></script>
+  </body>
+</html>

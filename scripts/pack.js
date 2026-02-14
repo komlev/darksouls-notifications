@@ -9,6 +9,10 @@ const NECESSARY_FILES = [
   "script.js",
   "sound.mp3",
   "style.css",
+  "options.html",
+  "options.js",
+  "popup.html",
+  "popup.js",
 ];
 const PACKAGE_NAMES = {
   firefox: "firefox.xpi",

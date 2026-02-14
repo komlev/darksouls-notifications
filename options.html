@@ -1,0 +1,122 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Email Sent - Settings</title>
+    <style>
+      body {
+        font-family:
+          -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu,
+          Cantarell, sans-serif;
+        padding: 20px;
+        max-width: 500px;
+        margin: 0 auto;
+        background: #1a1a1a;
+        color: #e0e0e0;
+      }
+      h1 {
+        font-size: 24px;
+        margin-bottom: 20px;
+        color: #f0a000;
+      }
+      .setting-group {
+        margin-bottom: 30px;
+        padding: 20px;
+        background: #2a2a2a;
+        border-radius: 8px;
+        border: 1px solid #3a3a3a;
+      }
+      label {
+        display: block;
+        margin-bottom: 10px;
+        font-weight: 500;
+        color: #d0d0d0;
+      }
+      .volume-control {
+        display: flex;
+        align-items: center;
+        gap: 15px;
+      }
+      input[type="range"] {
+        flex: 1;
+        height: 6px;
+        background: #4a4a4a;
+        border-radius: 3px;
+        outline: none;
+        -webkit-appearance: none;
+      }
+      input[type="range"]::-webkit-slider-thumb {
+        -webkit-appearance: none;
+        appearance: none;
+        width: 20px;
+        height: 20px;
+        background: #f0a000;
+        cursor: pointer;
+        border-radius: 50%;
+      }
+      input[type="range"]::-moz-range-thumb {
+        width: 20px;
+        height: 20px;
+        background: #f0a000;
+        cursor: pointer;
+        border-radius: 50%;
+        border: none;
+      }
+      .volume-value {
+        min-width: 45px;
+        text-align: center;
+        font-weight: bold;
+        color: #f0a000;
+      }
+      .test-button {
+        padding: 10px 20px;
+        background: #f0a000;
+        color: #1a1a1a;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+        font-weight: bold;
+        font-size: 14px;
+        transition: background 0.2s;
+        margin-top: 8px;
+      }
+      .test-button:hover {
+        background: #ffb820;
+      }
+      .test-button:active {
+        background: #d09000;
+      }
+      .status {
+        margin-top: 10px;
+        padding: 10px;
+        background: #3a3a3a;
+        border-radius: 5px;
+        text-align: center;
+        font-size: 12px;
+        color: #a0a0a0;
+        min-height: 20px;
+      }
+      .status.success {
+        color: #4caf50;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>Dark Souls Email Notification Settings</h1>
+
+    <div class="setting-group">
+      <label for="volume">Sound Volume</label>
+      <div class="volume-control">
+        <input type="range" id="volume" min="0" max="100" value="75" />
+        <span class="volume-value" id="volumeValue">75%</span>
+      </div>
+      <button class="test-button" id="testSound">Test Sound</button>
+      <div class="status" id="status">
+        Adjust the volume and click "Test Sound" to preview
+      </div>
+    </div>
+
+    <script src="options.js"></script>
+  </body>
+</html>

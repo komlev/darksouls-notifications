@@ -4,9 +4,13 @@ const TEXT = "EMAIL SENT";
 // playing sound
 const playSound = () => {
   try {
-    const sound = new Audio(chrome.runtime.getURL("sound.mp3"));
-    sound.volume = 0.75;
-    sound.play();
+    // Get volume from storage (default to 75%)
+    chrome.storage.sync.get(["volume"], (result) => {
+      const volume = result.volume !== undefined ? result.volume / 100 : 0.75;
+      const sound = new Audio(chrome.runtime.getURL("sound.mp3"));
+      sound.volume = volume;
+      sound.play();
+    });
   } catch (_err) {}
 };
 
