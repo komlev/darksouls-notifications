@@ -20,7 +20,7 @@ volumeSlider.addEventListener("input", () => {
 
 // Save to storage only when user finishes adjusting (releases slider)
 volumeSlider.addEventListener("change", () => {
-  const volume = Number.parseInt(volumeSlider.value);
+  const volume = Number.parseInt(volumeSlider.value, 10);
   chrome.storage.sync.set({ volume }, () => {
     status.textContent = "Saved!";
     status.classList.add("success");
@@ -34,7 +34,7 @@ volumeSlider.addEventListener("change", () => {
 // Test sound button
 testButton.addEventListener("click", () => {
   try {
-    const volume = Number.parseInt(volumeSlider.value) / 100;
+    const volume = Number.parseInt(volumeSlider.value, 10) / 100;
     const sound = new Audio(chrome.runtime.getURL("sound.mp3"));
     sound.volume = volume;
     sound.play();

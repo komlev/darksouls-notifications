@@ -249,6 +249,8 @@ chrome.webRequest.onBeforeRequest.addListener(
       "https://outlook.live.com/owa/*/service.svc?action=CreateItem*",
       "https://outlook.office.com/owa/service.svc?action=CreateItem*",
       "https://outlook.office.com/owa/*/service.svc?action=CreateItem*",
+      "https://outlook.office365.com/owa/service.svc?action=CreateItem*",
+      "https://outlook.office365.com/owa/*/service.svc?action=CreateItem*",
     ],
     types: ["xmlhttprequest"],
   },
