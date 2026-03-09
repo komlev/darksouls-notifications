@@ -236,6 +236,7 @@ chrome.webRequest.onBeforeRequest.addListener(
 );
 
 // Listen for network requests to Outlook service endpoint
+// Covers: outlook.live.com, outlook.office.com, outlook.office365.com
 chrome.webRequest.onBeforeRequest.addListener(
   (details) => {
     if (isOutlookSendRequest(details.requestBody)) {
@@ -251,6 +252,29 @@ chrome.webRequest.onBeforeRequest.addListener(
       "https://outlook.office.com/owa/*/service.svc?action=CreateItem*",
       "https://outlook.office365.com/owa/service.svc?action=CreateItem*",
       "https://outlook.office365.com/owa/*/service.svc?action=CreateItem*",
+    ],
+    types: ["xmlhttprequest"],
+  },
+  ["requestBody"],
+);
+
+// Listen for network requests to the new Outlook (outlook.cloud.microsoft)
+// The new Outlook web shares the same OWA service API structure as outlook.live.com,
+// but is served from a different origin. We reuse isOutlookSendRequest since the
+// request body format (MessageDisposition, ComposeOperation) is identical.
+chrome.webRequest.onBeforeRequest.addListener(
+  (details) => {
+    if (isOutlookSendRequest(details.requestBody)) {
+      chrome.tabs
+        .sendMessage(details.tabId, { action: "emailSent" })
+        .catch(() => {});
+    }
+  },
+  {
+    urls: [
+      // New Outlook web app (outlook.cloud.microsoft) — same OWA API surface
+      "https://outlook.cloud.microsoft/owa/*/service.svc?action=CreateItem*",
+      "https://outlook.cloud.microsoft/owa/service.svc?action=CreateItem*",
     ],
     types: ["xmlhttprequest"],
   },

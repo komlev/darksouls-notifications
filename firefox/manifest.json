@@ -1,60 +1,62 @@
 {
-	"manifest_version": 2,
-	"name": "Email Sent - Dark Souls Notification",
-	"description": "Dark Souls themed notification when you send an email (Gmail, Outlook, Yahoo, ProtonMail, Yandex).",
-	"version": "2.5",
-	"icons": {
-		"48": "icon-48.png",
-		"96": "icon-96.png"
-	},
-	"browser_action": {
-		"default_popup": "popup.html",
-		"default_icon": {
-			"48": "icon-48.png",
-			"96": "icon-96.png"
-		},
-		"default_title": "Dark Souls Email Notification"
-	},
-	"background": {
-		"scripts": ["background.js"]
-	},
-	"browser_specific_settings": {
-		"gecko": {
-			"id": "{4fb15d12-23d8-483f-be4c-aa6608ff6dac}",
-			"data_collection_permissions": {
-				"required": ["none"]
-			}
-		}
-	},
-	"permissions": [
-		"webRequest",
-		"storage",
-		"https://mail.google.com/*",
-		"https://outlook.live.com/*",
-		"https://outlook.office.com/*",
-		"https://outlook.office365.com/*",
-		"https://mail.yahoo.com/*",
-		"https://mail.proton.me/*",
-		"https://mail.yandex.ru/*"
-	],
-	"options_ui": {
-		"page": "options.html",
-		"open_in_tab": false
-	},
-	"content_scripts": [
-		{
-			"matches": [
-				"https://mail.google.com/*",
-				"https://outlook.live.com/*",
-				"https://outlook.office.com/*",
-				"https://outlook.office365.com/*",
-				"https://mail.yahoo.com/*",
-				"https://mail.proton.me/*",
-				"https://mail.yandex.ru/*"
-			],
-			"js": ["script.js"],
-			"css": ["style.css"]
-		}
-	],
-	"web_accessible_resources": ["sound.mp3"]
+  "manifest_version": 2,
+  "name": "Email Sent - Dark Souls Notification",
+  "description": "Dark Souls themed notification when you send an email (Gmail, Outlook, Yahoo, ProtonMail, Yandex).",
+  "version": "2.5",
+  "icons": {
+    "48": "icon-48.png",
+    "96": "icon-96.png"
+  },
+  "browser_action": {
+    "default_popup": "popup.html",
+    "default_icon": {
+      "48": "icon-48.png",
+      "96": "icon-96.png"
+    },
+    "default_title": "Dark Souls Email Notification"
+  },
+  "background": {
+    "scripts": ["background.js"]
+  },
+  "browser_specific_settings": {
+    "gecko": {
+      "id": "{4fb15d12-23d8-483f-be4c-aa6608ff6dac}",
+      "data_collection_permissions": {
+        "required": ["none"]
+      }
+    }
+  },
+  "permissions": [
+    "webRequest",
+    "storage",
+    "https://mail.google.com/*",
+    "https://outlook.live.com/*",
+    "https://outlook.office.com/*",
+    "https://outlook.office365.com/*",
+    "https://outlook.cloud.microsoft/*",
+    "https://mail.yahoo.com/*",
+    "https://mail.proton.me/*",
+    "https://mail.yandex.ru/*"
+  ],
+  "options_ui": {
+    "page": "options.html",
+    "open_in_tab": false
+  },
+  "content_scripts": [
+    {
+      "matches": [
+        "https://mail.google.com/*",
+        "https://outlook.live.com/*",
+        "https://outlook.office.com/*",
+        "https://outlook.office365.com/*",
+        "https://outlook.cloud.microsoft/*",
+        "https://mail.yahoo.com/*",
+        "https://mail.proton.me/*",
+        "https://mail.yandex.ru/*"
+      ],
+      "js": ["script.js"],
+      "css": ["style.css"]
+    }
+  ],
+  "web_accessible_resources": ["sound.mp3"]
 }

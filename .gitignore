@@ -24,3 +24,14 @@ dist-ssr
 *.sw?
 ./dist
 ./tmp_*
+
+tmp_*
+chrome/script.js
+chrome/background.js
+chrome/style.css
+chrome/sound.mp3
+chrome/OptimusPrinceps.ttf
+chrome/options.html
+chrome/options.js
+chrome/popup.html
+chrome/popup.js
