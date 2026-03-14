@@ -34,7 +34,8 @@
 		"https://outlook.office365.com/*",
 		"https://mail.yahoo.com/*",
 		"https://mail.proton.me/*",
-		"https://mail.yandex.ru/*"
+		"https://mail.yandex.ru/*",
+		"https://github.com/*"
 	],
 	"content_scripts": [
 		{
@@ -45,7 +46,8 @@
 				"https://outlook.office365.com/*",
 				"https://mail.yahoo.com/*",
 				"https://mail.proton.me/*",
-				"https://mail.yandex.ru/*"
+				"https://mail.yandex.ru/*",
+				"https://github.com/*"
 			],
 			"js": ["script.js"],
 			"css": ["style.css"]
@@ -61,7 +63,8 @@
 				"https://outlook.office365.com/*",
 				"https://mail.yahoo.com/*",
 				"https://mail.proton.me/*",
-				"https://mail.yandex.ru/*"
+				"https://mail.yandex.ru/*",
+				"https://github.com/*"
 			]
 		}
 	]

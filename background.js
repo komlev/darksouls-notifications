@@ -186,29 +186,26 @@ const isProtonMailSendRequest = (url, method) => {
   }
 };
 
-// Helper function to check if Yandex request is a send action
-const isYandexSendRequest = (url, method) => {
-  // Yandex uses POST method with _send=true parameter for sending messages
-  // Draft saves use _send=false or no _send parameter
+// Helper function to check if GitHub request is a PR creation
+const isGitHubPRCreationRequest = (url, method) => {
+  // GitHub creates PRs via POST to /pull/create
   try {
-    return (
-      method === "POST" &&
-      url.includes("/web-api/do-send/") &&
-      url.includes("_send=true")
-    );
+    return method === "POST" && url.includes("/pull/create");
   } catch (_err) {
     return false;
   }
 };
+
+// ============================================================================
+// Network Listeners - Email Detection
+// ============================================================================
 
 // Listen for network requests to Gmail sync endpoint (/i/s)
 // This endpoint is used for most Gmail actions including sending emails
 chrome.webRequest.onBeforeRequest.addListener(
   (details) => {
     if (isGmailSendRequest(details.requestBody)) {
-      chrome.tabs
-        .sendMessage(details.tabId, { action: "emailSent" })
-        .catch(() => {});
+      chrome.tabs.sendMessage(details.tabId, { action: "emailSent" }, () => {});
     }
   },
   {
@@ -223,9 +220,7 @@ chrome.webRequest.onBeforeRequest.addListener(
 chrome.webRequest.onBeforeRequest.addListener(
   (details) => {
     if (isGmailSendRequest(details.requestBody)) {
-      chrome.tabs
-        .sendMessage(details.tabId, { action: "emailSent" })
-        .catch(() => {});
+      chrome.tabs.sendMessage(details.tabId, { action: "emailSent" }, () => {});
     }
   },
   {
@@ -239,9 +234,7 @@ chrome.webRequest.onBeforeRequest.addListener(
 chrome.webRequest.onBeforeRequest.addListener(
   (details) => {
     if (isOutlookSendRequest(details.requestBody)) {
-      chrome.tabs
-        .sendMessage(details.tabId, { action: "emailSent" })
-        .catch(() => {});
+      chrome.tabs.sendMessage(details.tabId, { action: "emailSent" }, () => {});
     }
   },
   {
@@ -261,9 +254,7 @@ chrome.webRequest.onBeforeRequest.addListener(
 chrome.webRequest.onBeforeRequest.addListener(
   (details) => {
     if (isYahooSendRequest(details.requestBody, details.url)) {
-      chrome.tabs
-        .sendMessage(details.tabId, { action: "emailSent" })
-        .catch(() => {});
+      chrome.tabs.sendMessage(details.tabId, { action: "emailSent" }, () => {});
     }
   },
   {
@@ -277,9 +268,7 @@ chrome.webRequest.onBeforeRequest.addListener(
 chrome.webRequest.onBeforeRequest.addListener(
   (details) => {
     if (isProtonMailSendRequest(details.url, details.method)) {
-      chrome.tabs
-        .sendMessage(details.tabId, { action: "emailSent" })
-        .catch(() => {});
+      chrome.tabs.sendMessage(details.tabId, { action: "emailSent" }, () => {});
     }
   },
   {
@@ -293,9 +282,7 @@ chrome.webRequest.onBeforeRequest.addListener(
 chrome.webRequest.onBeforeRequest.addListener(
   (details) => {
     if (isYandexSendRequest(details.url, details.method)) {
-      chrome.tabs
-        .sendMessage(details.tabId, { action: "emailSent" })
-        .catch(() => {});
+      chrome.tabs.sendMessage(details.tabId, { action: "emailSent" }, () => {});
     }
   },
   {
@@ -304,3 +291,56 @@ chrome.webRequest.onBeforeRequest.addListener(
   },
   ["requestBody"],
 );
+
+// Store PR creation timestamps so we can show notification after navigation
+const prCreationTimestamps = {};
+
+// Message listener to provide tab ID to content scripts
+chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
+  if (message.action === "getTabId") {
+    sendResponse({ tabId: sender.tab.id });
+  }
+  return true;
+});
+
+chrome.webRequest.onBeforeRequest.addListener(
+  (details) => {
+    if (isGitHubPRCreationRequest(details.url, details.method)) {
+      // Store the timestamp so we know a PR was created
+      prCreationTimestamps[details.tabId] = Date.now();
+    }
+  },
+  {
+    urls: ["https://github.com/*/pull/create*"],
+    types: ["main_frame"],
+  },
+);
+
+// Listen for when we navigate to the PR page after creation
+chrome.webRequest.onCompleted.addListener(
+  (details) => {
+    // Check if we just created a PR and now we're viewing it
+    if (
+      details.method === "GET" &&
+      /github\.com\/.+\/.+\/pull\/\d+/.test(details.url) &&
+      details.type === "main_frame"
+    ) {
+      const tabId = details.tabId;
+      const justCreated = prCreationTimestamps[tabId];
+
+      if (justCreated && Date.now() - justCreated < 5000) {
+        // Use tab-specific storage key to avoid cross-tab interference
+        const storageKey = `prCreated_${tabId}`;
+        chrome.storage.local.set({ [storageKey]: true }, () => {});
+
+        // Clean up
+        delete prCreationTimestamps[tabId];
+      }
+    }
+  },
+  {
+    urls: ["https://github.com/*/pull/*"],
+    types: ["main_frame"],
+  },
+);
+

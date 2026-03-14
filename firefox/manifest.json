@@ -35,7 +35,8 @@
 		"https://outlook.office365.com/*",
 		"https://mail.yahoo.com/*",
 		"https://mail.proton.me/*",
-		"https://mail.yandex.ru/*"
+		"https://mail.yandex.ru/*",
+		"https://github.com/*"
 	],
 	"options_ui": {
 		"page": "options.html",
@@ -50,7 +51,8 @@
 				"https://outlook.office365.com/*",
 				"https://mail.yahoo.com/*",
 				"https://mail.proton.me/*",
-				"https://mail.yandex.ru/*"
+				"https://mail.yandex.ru/*",
+				"https://github.com/*"
 			],
 			"js": ["script.js"],
 			"css": ["style.css"]

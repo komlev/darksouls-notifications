@@ -1,5 +1,8 @@
-const PREFIX = "email-sent-";
-const TEXT = "EMAIL SENT";
+const PREFIX = "ds-banner-";
+const EMAIL_TEXT = "EMAIL SENT";
+const GIT_TEXT = "PR SUBMITTED";
+
+
 
 // playing sound
 const playSound = () => {
@@ -9,13 +12,23 @@ const playSound = () => {
       const volume = result.volume !== undefined ? result.volume / 100 : 0.75;
       const sound = new Audio(chrome.runtime.getURL("sound.mp3"));
       sound.volume = volume;
-      sound.play();
+
+      // Try to play and handle errors gracefully
+      const playPromise = sound.play();
+      if (playPromise && typeof playPromise.catch === "function") {
+        playPromise.catch(() => {
+          // Audio playback failed (likely due to CSP or browser policy)
+          // Silently fail - notification will still display
+        });
+      }
     });
-  } catch (_err) {}
+  } catch (_err) {
+    // Silently fail on CSP or other errors
+  }
 };
 
 // show email sent text
-const showText = () => {
+const showText = (text) => {
   const container = document.createElement("div");
   container.classList.add(`${PREFIX}screen`);
   let glow = "";
@@ -28,7 +41,7 @@ const showText = () => {
   container.innerHTML = `
     <div class="${PREFIX}bg"></div>
     <div style="position:relative;">
-        <span class="${PREFIX}title">${TEXT}</span>
+        <span class="${PREFIX}title">${text}</span>
         ${glow}
     </div>
   `;
@@ -48,9 +61,23 @@ const showText = () => {
   }, 5000);
 };
 
-// Listen for messages from background script
+// Listen for email messages from background script
 chrome.runtime.onMessage.addListener((message) => {
   if (message.action === "emailSent") {
-    showText();
+    showText(EMAIL_TEXT);
+  }
+});
+
+// Check if a PR was just created (check storage). Redirect on PR submit requires different handling from email.
+chrome.runtime.sendMessage({ action: "getTabId" }, (response) => {
+  if (response && response.tabId) {
+    const storageKey = `prCreated_${response.tabId}`;
+    chrome.storage.local.get([storageKey], (result) => {
+      if (result[storageKey]) {
+        showText(GIT_TEXT);
+        // Clear the flag
+        chrome.storage.local.remove([storageKey]);
+      }
+    });
   }
 });
