@@ -247,6 +247,8 @@ chrome.webRequest.onBeforeRequest.addListener(
   {
     urls: [
       "https://outlook.live.com/owa/*/service.svc?action=CreateItem*",
+      "https://outlook.cloud.microsoft/owa/service.svc?action=CreateItem*",
+      "https://outlook.cloud.microsoft/owa/*/service.svc?action=CreateItem*",
       "https://outlook.office.com/owa/service.svc?action=CreateItem*",
       "https://outlook.office.com/owa/*/service.svc?action=CreateItem*",
       "https://outlook.office365.com/owa/service.svc?action=CreateItem*",

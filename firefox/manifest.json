@@ -31,6 +31,7 @@
 		"storage",
 		"https://mail.google.com/*",
 		"https://outlook.live.com/*",
+		"https://outlook.cloud.microsoft/*",
 		"https://outlook.office.com/*",
 		"https://outlook.office365.com/*",
 		"https://mail.yahoo.com/*",
@@ -46,6 +47,7 @@
 			"matches": [
 				"https://mail.google.com/*",
 				"https://outlook.live.com/*",
+				"https://outlook.cloud.microsoft/*",
 				"https://outlook.office.com/*",
 				"https://outlook.office365.com/*",
 				"https://mail.yahoo.com/*",
