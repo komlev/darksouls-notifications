@@ -205,7 +205,11 @@ const isYandexSendRequest = (url, method) => {
 const isZohoSendRequest = (requestBody) => {
   // Zoho uses a single endpoint for send/reply/forward
   // sendImm=true distinguishes actual sends from draft saves
+  // Chrome parses application/x-www-form-urlencoded bodies into formData (not raw)
   try {
+    if (requestBody?.formData) {
+      return requestBody.formData.sendImm?.[0] === "true";
+    }
     const bodyStr = decodeRequestBody(requestBody);
     return bodyStr.includes("sendImm=true");
   } catch (_err) {
