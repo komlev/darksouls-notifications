@@ -201,6 +201,22 @@ const isYandexSendRequest = (url, method) => {
   }
 };
 
+// Helper function to check if Zoho Mail request is a send action
+const isZohoSendRequest = (requestBody) => {
+  // Zoho uses a single endpoint for send/reply/forward
+  // sendImm=true distinguishes actual sends from draft saves
+  // Chrome parses application/x-www-form-urlencoded bodies into formData (not raw)
+  try {
+    if (requestBody?.formData) {
+      return requestBody.formData.sendImm?.[0] === "true";
+    }
+    const bodyStr = decodeRequestBody(requestBody);
+    return bodyStr.includes("sendImm=true");
+  } catch (_err) {
+    return false;
+  }
+};
+
 // Listen for network requests to Gmail sync endpoint (/i/s)
 // This endpoint is used for most Gmail actions including sending emails
 chrome.webRequest.onBeforeRequest.addListener(
@@ -302,6 +318,22 @@ chrome.webRequest.onBeforeRequest.addListener(
   },
   {
     urls: ["https://mail.yandex.ru/web-api/do-send/*"],
+    types: ["xmlhttprequest"],
+  },
+  ["requestBody"],
+);
+
+// Listen for network requests to Zoho Mail send endpoint
+chrome.webRequest.onBeforeRequest.addListener(
+  (details) => {
+    if (isZohoSendRequest(details.requestBody)) {
+      chrome.tabs
+        .sendMessage(details.tabId, { action: "emailSent" })
+        .catch(() => {});
+    }
+  },
+  {
+    urls: ["https://mail.zoho.com/zm/send.do*"],
     types: ["xmlhttprequest"],
   },
   ["requestBody"],

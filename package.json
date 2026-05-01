@@ -1,6 +1,6 @@
 {
 	"name": "darksouls-notifications",
-	"version": "2.6.0",
+	"version": "2.7.0",
 	"description": "Dark souls email notifications",
 	"type": "module",
 	"scripts": {
