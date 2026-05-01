@@ -5,7 +5,7 @@ Dark Souls themed email notification extension
 ## Features
 - Dark Souls theme for email notifications
 - Supports both Chrome and Firefox browsers
-- Supports Gmail, Outlook, Yahoo, ProtonMail, Yandex
+- Supports Gmail, Outlook, Yahoo, ProtonMail, Yandex, Zoho
 - Supports new messages, replies and forwards
 - Adjustable volume control via extension settings
 
